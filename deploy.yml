@@ -1,10 +1,10 @@
 - hosts: webservers
   tasks:
     - name: Deploy nginx
-container
-      docker_container:
-        name: nginx
-        image: nginx-image
-        state: started
-        ports:
-          - "80:80"
+      container:
+        docker_container:
+          name: nginx
+          image: nginx-image
+          state: started
+          ports:
+            - "80:80"
