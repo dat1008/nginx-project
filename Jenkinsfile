@@ -4,6 +4,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git 'https://github.com/DAT1008-ZOFGK/nginx-project'
+                sh 'ls -lah'
             }
         }
         stage('Build') {
