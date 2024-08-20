@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/dat1008-zofgk/nginx-project.git'
+                git 'https://github.com/DAT1008-ZOFGK/nginx-project'
             }
         }
         stage('Build') {
