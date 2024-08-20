@@ -1,7 +1,7 @@
 - hosts: webservers
   tasks:
     - name: Deploy nginx
-      container:
+      community.docker.container:
         docker_container:
           name: nginx
           image: nginx-image
