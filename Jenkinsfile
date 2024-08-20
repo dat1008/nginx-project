@@ -1,19 +1,19 @@
 pipeline {
-    agent any 
+    agent any
     stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/dat1008-zofgk/nginx-project.git'
+            }
+        }
         stage('Build') {
             steps {
-                script {
-                    docker.build('nginx-image')
-                }
+                sh 'docker build -t nginx-image .'
             }
         }
         stage('Deploy') {
             steps {
-                ansiblePlaybook(
-                    playbook: 'deploy.yml',
-                    inventory: 'inventory.ini'
-                )
+                sh 'ansible-playbook deploy.yml'
             }
         }
     }
