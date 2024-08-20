@@ -1,10 +1,9 @@
-- hosts: webservers
+- hosts: vm2
+  become: yes
   tasks:
-    - name: Deploy nginx
-      community.docker.container:
-        docker_container:
-          name: nginx
-          image: nginx-image
-          state: started
-          ports:
-            - "80:80"
+    - name: Deploy nginx container
+      docker_container:
+        name: nginx
+        image: nginx-image
+        ports:
+          - "80:80"
