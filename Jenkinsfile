@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm  // Thực hiện checkout mã nguồn từ Git
+                checkout scm
                 sh 'ls -lah'
             }
         }
@@ -12,7 +12,10 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'docker build --pull -t nginx-image .'  // Sử dụng --pull để đảm bảo lấy image mới nhất
+                        sh '''
+                            docker pull nginx-image || true
+                            docker build --cache-from nginx-image -t nginx-image .
+                        '''
                     } catch (Exception e) {
                         error "Build failed: ${e.message}"
                     }
@@ -34,8 +37,8 @@ pipeline {
 
     post {
         always {
-            sh 'docker system prune -f'  // Dọn dẹp các docker resources không sử dụng
-            cleanWs()  // Xóa workspace để tiết kiệm không gian
+            sh 'docker system prune -f'
+            cleanWs()
         }
         success {
             echo 'Build and deployment succeeded!'
