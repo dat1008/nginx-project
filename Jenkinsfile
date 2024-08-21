@@ -26,7 +26,6 @@ pipeline {
             steps {
                 script {
                     try {
-                        // Chạy container từ image mới build và thực hiện kiểm tra
                         sh '''
                             docker run --rm nginx-image nginx -t
                         '''
