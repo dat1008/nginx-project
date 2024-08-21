@@ -22,6 +22,20 @@ pipeline {
                 }
             }
         }
+        stage('Test') {
+            steps {
+                script {
+                    try {
+                        // Chạy container từ image mới build và thực hiện kiểm tra
+                        sh '''
+                            docker run --rm nginx-image nginx -t
+                        '''
+                    } catch (Exception e) {
+                        error "Test failed: ${e.message}"
+                    }
+                }
+            }
+        }
         stage('Deploy') {
             steps {
                 script {
@@ -41,10 +55,10 @@ pipeline {
             cleanWs()
         }
         success {
-            echo 'Build and deployment succeeded!'
+            echo 'Build, test, and deployment succeeded!'
         }
         failure {
-            echo 'Build or deployment failed!'
+            echo 'Build, test, or deployment failed!'
         }
     }
 }
