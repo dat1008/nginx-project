@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                echo 'Checking out source code...'
                 checkout scm
                 sh 'ls -lah'
             }
@@ -11,6 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    echo 'Building Docker image with cache...'
                     try {
                         sh '''
                             docker pull nginx-image || true
@@ -25,6 +27,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
+                    echo 'Running tests on Docker container...'
                     try {
                         sh '''
                             docker run --rm nginx-image nginx -t
@@ -38,6 +41,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    echo 'Deploying Docker container with Ansible...'
                     try {
                         sh 'ansible-playbook deploy.yml'
                     } catch (Exception e) {
@@ -50,6 +54,7 @@ pipeline {
 
     post {
         always {
+            echo 'Cleaning up Docker system and workspace...'
             sh 'docker system prune -f'
             cleanWs()
         }
