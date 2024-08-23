@@ -17,6 +17,7 @@ pipeline {
                         sh '''
                             docker pull nginx-image || true
                             docker build --cache-from nginx-image -t nginx-image .
+                            docker tag nginx-image nginx-image:v1
                         '''
                     } catch (Exception e) {
                         error "Build failed: ${e.message}"
@@ -66,3 +67,4 @@ pipeline {
         }
     }
 }
+
