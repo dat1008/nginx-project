@@ -15,9 +15,8 @@ pipeline {
                     echo 'Building Docker image with cache...'
                     try {
                         sh '''
-                            docker pull nginx-image || true
-                            docker build --cache-from nginx-image -t nginx-image .
-                            docker tag nginx-image nginx-image:v1
+                            docker pull nginx-image:v1 || true
+                            docker build --cache-from nginx-image:v1 -t nginx-image:v1 .
                         '''
                     } catch (Exception e) {
                         error "Build failed: ${e.message}"
@@ -31,7 +30,7 @@ pipeline {
                     echo 'Running tests on Docker container...'
                     try {
                         sh '''
-                            docker run --rm nginx-image nginx -t
+                            docker run --rm nginx-image:v1 nginx -t
                         '''
                     } catch (Exception e) {
                         error "Test failed: ${e.message}"
@@ -67,4 +66,3 @@ pipeline {
         }
     }
 }
-
