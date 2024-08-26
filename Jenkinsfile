@@ -43,7 +43,10 @@ pipeline {
                 script {
                     echo 'Deploying Docker container with Ansible...'
                     try {
-                        sh 'ansible-playbook deploy.yml'
+                        // Sử dụng ansible-playbook với file deploy.yml đã được cập nhật
+                        sh '''
+                            ansible-playbook deploy.yml --private-key=~/.ssh/id_rsa
+                        '''
                     } catch (Exception e) {
                         error "Deployment failed: ${e.message}"
                     }
