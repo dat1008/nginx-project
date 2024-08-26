@@ -1,19 +1,15 @@
-- name: Deploy Nginx container
-  hosts: all
+- hosts: all
+  remote_user: vsi
   become: yes
   tasks:
+    - name: Pull Docker image from Docker Hub
+      docker_image:
+        name: nginx-image
+        tag: v1
+
     - name: Deploy nginx container
       docker_container:
         name: nginx
         image: nginx-image:v1
         ports:
           - "80:80"
-
-  vars:
-    ansible_ssh_private_key_file: ~/.ssh/id_rsa  
-
-  inventory:
-    hosts:
-      vm2:
-        ansible_host: 10.10.3.70
-        ansible_user: vsi
