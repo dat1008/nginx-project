@@ -1,9 +1,19 @@
-- hosts: vm2
+- name: Deploy Nginx container
+  hosts: all
   become: yes
   tasks:
     - name: Deploy nginx container
       docker_container:
         name: nginx
-        image: nginx-image
+        image: nginx-image:v1
         ports:
           - "80:80"
+
+  vars:
+    ansible_ssh_private_key_file: ~/.ssh/id_rsa  
+
+  inventory:
+    hosts:
+      vm2:
+        ansible_host: 10.10.3.70
+        ansible_user: vsi
