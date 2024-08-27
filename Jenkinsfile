@@ -14,11 +14,13 @@ pipeline {
                 script {
                     echo 'Building Docker image with cache...'
                     try {
-                        docker.image('datzofgk/nginx-image:v1').pull() 
+                        sh '''
+                            docker pull datzofgk/nginx-image:v1 || true
+                            docker build --cache-from datzofgk/nginx-image:v1 -t datzofgk/nginx-image:v1 .
+                        '''
                     } catch (Exception e) {
-                        echo "Image pull failed: ${e.message}. Proceeding to build without cache."
+                        error "Build failed: ${e.message}"
                     }
-                    def customImage = docker.build("datzofgk/nginx-image:v1", "--cache-from=datzofgk/nginx-image:v1 .") 
                 }
             }
         }
@@ -27,10 +29,9 @@ pipeline {
                 script {
                     echo 'Running tests on Docker container...'
                     try {
-                        def customImage = docker.image("datzofgk/nginx-image:v1")
-                        customImage.inside {
-                            sh 'nginx -t'
-                        }
+                        sh '''
+                            docker run --rm datzofgk/nginx-image:v1 nginx -t
+                        '''
                     } catch (Exception e) {
                         error "Test failed: ${e.message}"
                     }
@@ -43,8 +44,9 @@ pipeline {
                     echo 'Pushing Docker image to Docker Hub...'
                     try {
                         docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
-                            def customImage = docker.image("datzofgk/nginx-image:v1")
-                            customImage.push()
+                            sh '''
+                                docker push datzofgk/nginx-image:v1
+                            '''
                         }
                     } catch (Exception e) {
                         error "Push failed: ${e.message}"
@@ -58,7 +60,7 @@ pipeline {
                     echo 'Deploying Docker container with Ansible...'
                     try {
                         sh '''
-                            ansible-playbook -i inventory.ini deploy.yml --private-key=~/.ssh/id_rsa -i 10.10.3.70
+                            ansible-playbook deploy.yml --private-key=~/.ssh/id_rsa -i 10.10.3.70,
                         '''
                     } catch (Exception e) {
                         error "Deployment failed: ${e.message}"
