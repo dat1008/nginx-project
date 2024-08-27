@@ -15,8 +15,8 @@ pipeline {
                     echo 'Building Docker image with cache...'
                     try {
                         sh '''
-                            docker pull nginx-image:v1 || true
-                            docker build --cache-from nginx-image:v1 -t nginx-image:v1 .
+                            docker pull yourdockerhubusername/nginx-image:v1 || true
+                            docker build --cache-from yourdockerhubusername/nginx-image:v1 -t yourdockerhubusername/nginx-image:v1 .
                         '''
                     } catch (Exception e) {
                         error "Build failed: ${e.message}"
@@ -30,10 +30,26 @@ pipeline {
                     echo 'Running tests on Docker container...'
                     try {
                         sh '''
-                            docker run --rm nginx-image:v1 nginx -t
+                            docker run --rm yourdockerhubusername/nginx-image:v1 nginx -t
                         '''
                     } catch (Exception e) {
                         error "Test failed: ${e.message}"
+                    }
+                }
+            }
+        }
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    echo 'Pushing Docker image to Docker Hub...'
+                    try {
+                        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
+                            sh '''
+                                docker push yourdockerhubusername/nginx-image:v1
+                            '''
+                        }
+                    } catch (Exception e) {
+                        error "Push failed: ${e.message}"
                     }
                 }
             }
@@ -43,7 +59,6 @@ pipeline {
                 script {
                     echo 'Deploying Docker container with Ansible...'
                     try {
-                        // Chạy ansible-playbook với cấu hình đã sửa
                         sh '''
                             ansible-playbook deploy.yml --private-key=~/.ssh/id_rsa -i 10.10.3.70
                         '''
