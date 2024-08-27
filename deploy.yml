@@ -1,11 +1,16 @@
 ---
-- hosts: 10.10.3.70
-  remote_user: vsi
-
+- hosts: nginx
   tasks:
-    - name: Pull Docker Image
-      command: docker pull datzofgk/nginx-image:v1
+    - name: Pull Docker image from Docker Hub
+      docker_image:
+        name: datzofgk/nginx-image
+        tag: v1
+        source: pull
 
-    - name: Run Docker Container
-      command: docker run -d -p 80:80 datzofgk/nginx-image:v1
-
+    - name: Run Docker container
+      docker_container:
+        name: nginx
+        image: datzofgk/nginx-image:v1
+        state: started
+        ports:
+          - "80:80"
