@@ -14,7 +14,7 @@ pipeline {
                 script {
                     echo 'Building Docker image with cache...'
                     try {
-                        docker.image('datzofgk/nginx-image:v1').pull() // Sử dụng Docker plugin để pull image
+                        docker.image('datzofgk/nginx-image:v1').pull() 
                     } catch (Exception e) {
                         echo "Image pull failed: ${e.message}. Proceeding to build without cache."
                     }
