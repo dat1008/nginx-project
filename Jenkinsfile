@@ -14,13 +14,11 @@ pipeline {
                 script {
                     echo 'Building Docker image with cache...'
                     try {
-                        sh '''
-                            docker pull datzofgk/nginx-image:v1 || true
-                            docker build --cache-from datzofgk/nginx-image:v1 -t datzofgk/nginx-image:v1 .
-                        '''
+                        docker.image('datzofgk/nginx-image:v1').pull() // Sử dụng Docker plugin để pull image
                     } catch (Exception e) {
-                        error "Build failed: ${e.message}"
+                        echo "Image pull failed: ${e.message}. Proceeding to build without cache."
                     }
+                    def customImage = docker.build("datzofgk/nginx-image:v1", "--cache-from=datzofgk/nginx-image:v1 .") 
                 }
             }
         }
@@ -29,9 +27,10 @@ pipeline {
                 script {
                     echo 'Running tests on Docker container...'
                     try {
-                        sh '''
-                            docker run --rm datzofgk/nginx-image:v1 nginx -t
-                        '''
+                        def customImage = docker.image("datzofgk/nginx-image:v1")
+                        customImage.inside {
+                            sh 'nginx -t'
+                        }
                     } catch (Exception e) {
                         error "Test failed: ${e.message}"
                     }
@@ -44,9 +43,8 @@ pipeline {
                     echo 'Pushing Docker image to Docker Hub...'
                     try {
                         docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
-                            sh '''
-                                docker push datzofgk/nginx-image:v1
-                            '''
+                            def customImage = docker.image("datzofgk/nginx-image:v1")
+                            customImage.push()
                         }
                     } catch (Exception e) {
                         error "Push failed: ${e.message}"
