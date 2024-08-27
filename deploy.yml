@@ -1,15 +1,11 @@
-- hosts: all
+---
+- hosts: 10.10.3.70
   remote_user: vsi
-  become: yes
-  tasks:
-    - name: Pull Docker image from Docker Hub
-      docker_image:
-        name: nginx-image
-        tag: v1
 
-    - name: Deploy nginx container
-      docker_container:
-        name: nginx
-        image: nginx-image:v1
-        ports:
-          - "80:80"
+  tasks:
+    - name: Pull Docker Image
+      command: docker pull datzofgk/nginx-image:v1
+
+    - name: Run Docker Container
+      command: docker run -d -p 80:80 datzofgk/nginx-image:v1
+
