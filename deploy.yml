@@ -1,12 +1,7 @@
 - hosts: nginx
   become: yes
   tasks:
-    - name: Copy Docker Compose file
-      copy:
-        src: /root/Docker/docker-compose.yml
-        dest: /home/vsi/docker-compose.yml
-
-    - name: Deploy nginx 
-      shell: |
-        docker-compose -f /home/vsi/docker-compose.yml up -d
-
+    - name: Deploy with Docker Compose
+      shell: docker-compose up -d
+      args:
+        chdir: /root/Docker/
