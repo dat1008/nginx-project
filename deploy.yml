@@ -1,15 +1,12 @@
-- hosts: nginx
-  tasks:        
-    - name: Pull Docker image from Docker Hub
-      docker_image:
-        name: datzofgk/nginx-image
-        tag: v1
-        source: pull
+- hosts: vm2
+  become: yes
+  tasks:
+    - name: Copy Docker Compose file to VM2
+      copy:
+        src: /root/Docker/docker-compose.yml
+        dest: /home/vsi/docker-compose.yml
 
-    - name: Run Docker container
-      docker_container:
-        name: nginx
-        image: datzofgk/nginx-image:v1
-        state: started
-        ports:
-          - "80:80"
+    - name: Deploy nginx container with Docker Compose
+      shell: |
+        docker-compose -f /home/vsi/docker-compose.yml up -d
+
