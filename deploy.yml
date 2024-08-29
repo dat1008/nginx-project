@@ -1,5 +1,15 @@
 - hosts: nginx
   tasks:
+    - name: Install packages
+      become: yes
+      become_user: root
+      pip:
+        name:
+          - requests
+          - docker
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+          
     - name: Pull Docker image from Docker Hub
       docker_image:
         name: datzofgk/nginx-image
