@@ -5,7 +5,8 @@
       get_url:
         url: https://github.com/docker/compose/releases/download/v2.18.2/docker-compose-linux-x86_64  # Thay thế URL bằng phiên bản và kiến trúc phù hợp
         dest: /usr/local/bin/docker-compose
-        mode: '0755'  # Cho phép thực thi file
+        mode: '0755' 
+        
     - name: Deploy with Docker Compose
       shell: docker-compose up -d
       args:
