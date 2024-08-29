@@ -1,4 +1,4 @@
-- hosts: vm2
+- hosts: nginx
   become: yes
   tasks:
     - name: Copy Docker Compose file to VM2
