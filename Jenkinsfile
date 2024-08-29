@@ -60,7 +60,7 @@ pipeline {
                     echo 'Deploying Docker container with Ansible...'
                     try {
                         sh '''
-                            ansible-playbook deploy.yml --private-key=/root/.ssh/id_rsa -vvvv
+                            ansible-playbook deploy.yml --private-key=/root/.ssh/id_rsa -i inventory.ini -vvvv
                         '''
                     } catch (Exception e) {
                         error "Deployment failed: ${e.message}"
