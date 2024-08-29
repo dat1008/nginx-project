@@ -1,4 +1,4 @@
-- hosts: 10.10.3.33
+- hosts: nginx
   tasks:
     - name: Pull Docker image from Docker Hub
       docker_image:
