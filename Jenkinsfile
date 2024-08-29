@@ -60,6 +60,9 @@ pipeline {
                     echo 'Deploying Docker container with Ansible...'
                     try {
                         sh '''
+                            ls -lah
+                            pwd
+                            whoami
                             ansible-playbook deploy.yml --private-key=/root/.ssh/id_rsa -i inventory 
                         '''
                     } catch (Exception e) {
