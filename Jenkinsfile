@@ -60,7 +60,7 @@ pipeline {
                     echo 'Deploying Docker container with Ansible...'
                     try {
                         sh '''
-                            ls -lah
+                            ls -lah /root/.ssh
                             pwd
                             whoami
                             ansible-playbook deploy.yml --private-key=/root/.ssh/id_rsa -i inventory -u root
