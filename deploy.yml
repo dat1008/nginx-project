@@ -1,5 +1,5 @@
 ---
-- hosts: nginx
+- hosts: all
   tasks:
     - name: Pull Docker image from Docker Hub
       docker_image:
