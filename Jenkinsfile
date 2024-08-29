@@ -60,6 +60,7 @@ pipeline {
                     echo 'Deploying Docker container with Ansible...'
                     try {
                         sh '''
+                            ANSIBLE_HOST_KEY_CHECKING=False
                             ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi
                         '''
                     } catch (Exception e) {
