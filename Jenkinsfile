@@ -63,7 +63,7 @@ pipeline {
                             ls -lah
                             pwd
                             whoami
-                            ansible-playbook deploy.yml --private-key=/root/.ssh/id_rsa -i inventory 
+                            ansible-playbook deploy.yml --private-key=/root/.ssh/id_rsa -i inventory -u root
                         '''
                     } catch (Exception e) {
                         error "Deployment failed: ${e.message}"
