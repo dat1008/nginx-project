@@ -15,8 +15,8 @@ pipeline {
                     echo 'Building Docker image with cache...'
                     try {
                         sh '''
-                            docker pull datzofgk/traefik-image:v1 || true
-                            docker build --cache-from datzofgk/traefik-image:v1 -t datzofgk/traefik-image:v1 .
+                            docker pull datzofgk/lighttpd-image:v1 || true
+                            docker build --cache-from datzofgk/lighttpd-image:v1 -t datzofgk/lighttpd-image:v1 .
                         '''
                     } catch (Exception e) {
                         error "Build failed: ${e.message}"
@@ -30,7 +30,7 @@ pipeline {
                     echo 'Running tests on Docker container...'
                     try {
                         sh '''
-                            docker run --rm datzofgk/traefik-image:v1 traefik version
+                            docker run --rm datzofgk/lighttpd-image:v1 lighttpd -t -f /etc/lighttpd/lighttpd.conf
                         '''
                     } catch (Exception e) {
                         error "Test failed: ${e.message}"
@@ -45,7 +45,7 @@ pipeline {
                     try {
                         docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
                             sh '''
-                                docker push datzofgk/traefik-image:v1
+                                docker push datzofgk/lighttpd-image:v1
                             '''
                         }
                     } catch (Exception e) {
