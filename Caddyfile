@@ -1,0 +1,22 @@
+:80 {
+    root * /usr/share/caddy/html
+    file_server
+
+    # Nếu bạn muốn sử dụng một cấu hình reverse proxy:
+    # reverse_proxy /api/* http://backend:8080
+
+    # Nếu bạn có một trang chủ (index.html) cụ thể, bạn có thể chỉ định như sau:
+    try_files {path} /index.html
+
+    # Logging
+    log {
+        output file /var/log/caddy/access.log
+        format console
+    }
+
+    # Để cấu hình header bảo mật:
+    header {
+        # X-Content-Type-Options header bảo mật
+        X-Content-Type-Options nosniff
+    }
+}
