@@ -15,8 +15,8 @@ pipeline {
                     echo 'Building Docker image with cache...'
                     try {
                         sh '''
-                            docker pull datzofgk/caddy-image:v1 || true
-                            docker build --cache-from datzofgk/caddy-image:v1 -t datzofgk/caddy-image:v1 .
+                            docker pull datzofgk/traefik-image:v1 || true
+                            docker build --cache-from datzofgk/traefik-image:v1 -t datzofgk/traefik-image:v1 .
                         '''
                     } catch (Exception e) {
                         error "Build failed: ${e.message}"
@@ -29,9 +29,8 @@ pipeline {
                 script {
                     echo 'Running tests on Docker container...'
                     try {
-                        // Create a temporary Docker container to validate Caddyfile
                         sh '''
-                            docker run --rm -v $WORKSPACE/Caddyfile:/etc/caddy/Caddyfile datzofgk/caddy-image:v1 sh -c "caddy validate --config /etc/caddy/Caddyfile"
+                            docker run --rm datzofgk/traefik-image:v1 traefik version
                         '''
                     } catch (Exception e) {
                         error "Test failed: ${e.message}"
@@ -46,7 +45,7 @@ pipeline {
                     try {
                         docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
                             sh '''
-                                docker push datzofgk/caddy-image:v1
+                                docker push datzofgk/traefik-image:v1
                             '''
                         }
                     } catch (Exception e) {
