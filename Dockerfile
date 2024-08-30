@@ -1,4 +1,4 @@
-FROM lighttpd:alpine
+FROM lighttpd:1.4-alpine
 
 COPY . /var/www/localhost/htdocs/
 
