@@ -15,8 +15,7 @@ pipeline {
                     echo 'Building Docker image with cache...'
                     try {
                         sh '''
-                            docker pull datzofgk/lighttpd-image:v1 || true
-                            docker build --cache-from datzofgk/lighttpd-image:v1 -t datzofgk/lighttpd-image:v1 .
+                            docker build -t datzofgk/lighttpd-image:v1 .
                         '''
                     } catch (Exception e) {
                         error "Build failed: ${e.message}"
