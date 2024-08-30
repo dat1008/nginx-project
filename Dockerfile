@@ -1,7 +1,7 @@
-FROM httpd:alpine
+FROM caddy:alpine
 
-COPY . /usr/local/apache2/htdocs/
+COPY . /usr/share/caddy
 
-RUN ls -lah /usr/local/apache2/htdocs
+RUN ls -lah /usr/share/caddy
 
-RUN chmod -R 755 /usr/local/apache2/htdocs
+RUN chmod -R 755 /usr/share/caddy
