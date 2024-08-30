@@ -29,8 +29,9 @@ pipeline {
                 script {
                     echo 'Running tests on Docker container...'
                     try {
+                        // Create a temporary Docker container to validate Caddyfile
                         sh '''
-                            docker run --rm -v $WORKSPACE/Caddyfile:/etc/caddy/Caddyfile datzofgk/caddy-image:v1 caddy validate --config /etc/caddy/Caddyfile
+                            docker run --rm -v $WORKSPACE/Caddyfile:/etc/caddy/Caddyfile datzofgk/caddy-image:v1 sh -c "caddy validate --config /etc/caddy/Caddyfile"
                         '''
                     } catch (Exception e) {
                         error "Test failed: ${e.message}"
