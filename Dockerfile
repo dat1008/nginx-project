@@ -1,9 +1,11 @@
-FROM traefik:v2.5
+FROM lighttpd:alpine
 
-COPY traefik.yml /etc/traefik/traefik.yml
+COPY . /var/www/localhost/htdocs/
 
-EXPOSE 80 443
+RUN chmod -R 755 /var/www/localhost/htdocs
 
-ENTRYPOINT ["traefik"]
-CMD ["--configFile=/etc/traefik/traefik.yml"]
+EXPOSE 80
+
+CMD ["lighttpd", "-D", "-f", "/etc/lighttpd/lighttpd.conf"]
+
 
