@@ -1,6 +1,11 @@
 - hosts: nginx
   become: yes
   tasks:
+    - name: Install Docker Compose
+      shell: |
+        sudo apt -y update
+        sudo apt-get install docker-compose-plugin
+    
     - name: Deploy with Docker Compose
       shell: docker-compose up -d
       args:
