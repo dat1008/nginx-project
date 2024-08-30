@@ -1,7 +1,9 @@
-FROM caddy:alpine
+FROM traefik:v2.5
 
-COPY . /usr/share/caddy
+COPY traefik.yml /etc/traefik/traefik.yml
 
-RUN ls -lah /usr/share/caddy
+EXPOSE 80 443
 
-RUN chmod -R 755 /usr/share/caddy
+ENTRYPOINT ["traefik"]
+CMD ["--configFile=/etc/traefik/traefik.yml"]
+
