@@ -1,7 +1,7 @@
-FROM nginx:alpine
+FROM httpd:alpine
 
-COPY . /usr/share/nginx/html
+COPY . /usr/local/apache2/htdocs/
 
-RUN ls -lah /usr/share/nginx/html
+RUN ls -lah /usr/local/apache2/htdocs
 
-RUN chmod -R 755 /usr/share/nginx/html
+RUN chmod -R 755 /usr/local/apache2/htdocs
