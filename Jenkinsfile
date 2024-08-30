@@ -15,7 +15,8 @@ pipeline {
                     echo 'Building Docker image with cache...'
                     try {
                         sh '''
-                            docker build -t datzofgk/lighttpd-image:v1 .
+                            docker pull datzofgk/apache-image:v1 || true
+                            docker build --cache-from datzofgk/apache-image:v1 -t datzofgk/apache-image:v1 .
                         '''
                     } catch (Exception e) {
                         error "Build failed: ${e.message}"
@@ -29,7 +30,7 @@ pipeline {
                     echo 'Running tests on Docker container...'
                     try {
                         sh '''
-                            docker run --rm datzofgk/lighttpd-image:v1 lighttpd -t -f /etc/lighttpd/lighttpd.conf
+                            docker run --rm datzofgk/apache-image:v1 httpd -t
                         '''
                     } catch (Exception e) {
                         error "Test failed: ${e.message}"
@@ -44,7 +45,7 @@ pipeline {
                     try {
                         docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
                             sh '''
-                                docker push datzofgk/lighttpd-image:v1
+                                docker push datzofgk/apache-image:v1
                             '''
                         }
                     } catch (Exception e) {
