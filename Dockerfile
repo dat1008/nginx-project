@@ -1,13 +1,10 @@
-FROM alpine:latest
+FROM httpd:alpine
 
-RUN apk --no-cache add lighttpd
+COPY . /usr/local/apache2/htdocs/
 
-COPY ./html /var/www/localhost/htdocs
-COPY ./lighttpd.conf /etc/lighttpd/lighttpd.conf
+RUN ls -lah /usr/local/apache2/htdocs
 
-EXPOSE 80
-
-CMD ["lighttpd", "-D", "-f", "/etc/lighttpd/lighttpd.conf"]
+RUN chmod -R 755 /usr/local/apache2/htdocs
 
 
 
