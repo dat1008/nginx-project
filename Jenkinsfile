@@ -46,11 +46,6 @@ pipeline {
                 }
             }
         }
-        stage('Prepare Ansible') {
-            steps {
-                sh 'pip install --upgrade ansible docker'
-            }
-        }
         stage('Deploy') {
             steps {
                 script {
