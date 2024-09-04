@@ -1,15 +1,14 @@
 - hosts: nginx
   become: yes
   become_method: sudo
+  vars:
+    ansible_become_password: "{{ lookup('env', 'datnt2024') }}"
   tasks:
-    - name: Add vsi user to docker group
-      user:
-        name: vsi
-        groups: docker
-        append: yes
-      become: yes
-      become_method: sudo
-      become_user: root
+    - name: Install Docker Python library
+      apt:
+        name: python3-docker
+        state: present
+        update_cache: yes
 
     - name: Login to Docker Hub
       docker_login:
