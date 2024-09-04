@@ -15,7 +15,6 @@ pipeline {
                     echo 'Building Docker image with cache...'
                     try {
                         sh '''
-                            docker pull datzofgk/nginx-image:v1 || true
                             docker build --cache-from datzofgk/nginx-image:v1 -t datzofgk/nginx-image:v1 .
                         '''
                     } catch (Exception e) {
