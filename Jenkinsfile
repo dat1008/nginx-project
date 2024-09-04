@@ -19,7 +19,6 @@ pipeline {
                 script {
                     echo "Building Docker image with tag: ${IMAGE_TAG}"
                     sh """
-                        docker pull ${IMAGE_NAME}:latest || true
                         docker build --cache-from ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${IMAGE_TAG} -t ${IMAGE_NAME}:latest .
                     """
                 }
@@ -54,19 +53,6 @@ pipeline {
                         ANSIBLE_HOST_KEY_CHECKING=False
                         ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}"
                     """
-                }
-            }
-        }
-        stage('Update docker-compose.yml') {
-            steps {
-                script {
-                    echo "Updating docker-compose.yml with new image tag: ${IMAGE_TAG}"
-                    sh "sed -i 's|\\${IMAGE_TAG:-latest}|${IMAGE_TAG}|g' docker-compose.yml"
-                    sh "git config user.email 'nguyentiendat20011008@gmail.com'"
-                    sh "git config user.name 'Dat'"
-                    sh "git add docker-compose.yml"
-                    sh "git commit -m 'Update docker-compose.yml with new image tag: ${IMAGE_TAG}'"
-                    sh "git push origin HEAD:main"
                 }
             }
         }

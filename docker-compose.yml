@@ -1,6 +1,0 @@
-version: '3'
-services:
-  nginx:
-    image: datzofgk/nginx-image:${IMAGE_TAG:-latest}
-    ports:
-      - "80:80"
