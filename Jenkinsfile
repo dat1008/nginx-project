@@ -33,7 +33,7 @@ pipeline {
                 script {
                     echo 'Pushing Docker image to Docker Hub'
                     try {
-                        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
+                        docker.withRegistry('https://index.docker.io/v2/', 'dockerhub-credentials-id') {
                             sh '''
                                 docker push ${IMAGE_NAME}:${IMAGE_TAG}
                                 docker push ${IMAGE_NAME}:latest
