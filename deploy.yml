@@ -1,6 +1,26 @@
 - hosts: nginx
+  vars:
+    image_tag: latest  # This will be overridden by the -e parameter in Jenkins
   tasks:
-    - name: Deploy with Docker Compose
-      shell: docker compose up -d
-      args:
-        chdir: /home/vsi/Docker
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+
+    - name: Pull the latest Docker image
+      docker_image:
+        name: "datzofgk/nginx-image:{{ image_tag }}"
+        source: pull
+
+    - name: Run Docker container
+      docker_container:
+        name: nginx-container
+        image: "datzofgk/nginx-image:{{ image_tag }}"
+        state: started
+        recreate: yes
+        ports:
+          - "80:80"
+
+    - name: Prune unused Docker images
+      docker_prune:
+        images: yes
