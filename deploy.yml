@@ -1,9 +1,11 @@
 - hosts: nginx
+  become: yes  
   tasks:
-    - name: Upgrade Docker Python library
-      pip:
-        name: docker
-        state: latest
+    - name: Install Docker Python library
+      apt:
+        name: python3-docker
+        state: present
+        update_cache: yes
 
     - name: Login to Docker Hub
       docker_login:
