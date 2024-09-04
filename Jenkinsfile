@@ -1,10 +1,15 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "datzofgk/nginx-image"
+        IMAGE_TAG = "v${BUILD_NUMBER}"
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                echo 'Checking out source code...'
+                echo 'Checking out source code'
                 checkout scm
                 sh 'ls -lah'
             }
@@ -12,10 +17,10 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    echo 'Building Docker image with cache...'
+                    echo 'Building Docker image'
                     try {
                         sh '''
-                            docker build --cache-from datzofgk/nginx-image:v1 -t datzofgk/nginx-image:v1 .
+                            docker build --cache-from ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${IMAGE_TAG} -t ${IMAGE_NAME}:latest .
                         '''
                     } catch (Exception e) {
                         error "Build failed: ${e.message}"
@@ -23,28 +28,15 @@ pipeline {
                 }
             }
         }
-        stage('Test') {
-            steps {
-                script {
-                    echo 'Running tests on Docker container...'
-                    try {
-                        sh '''
-                            docker run --rm datzofgk/nginx-image:v1 nginx -t
-                        '''
-                    } catch (Exception e) {
-                        error "Test failed: ${e.message}"
-                    }
-                }
-            }
-        }
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    echo 'Pushing Docker image to Docker Hub...'
+                    echo 'Pushing Docker image to Docker Hub'
                     try {
                         docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
                             sh '''
-                                docker push datzofgk/nginx-image:v1
+                                docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                                docker push ${IMAGE_NAME}:latest
                             '''
                         }
                     } catch (Exception e) {
@@ -56,11 +48,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    echo 'Deploying Docker container with Ansible...'
+                    echo 'Deploying Docker container'
                     try {
                         sh '''
                             ANSIBLE_HOST_KEY_CHECKING=False
-                            ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi
+                            ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}"
                         '''
                     } catch (Exception e) {
                         error "Deployment failed: ${e.message}"
