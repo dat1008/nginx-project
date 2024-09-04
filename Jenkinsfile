@@ -46,6 +46,11 @@ pipeline {
                 }
             }
         }
+        stage('Prepare Ansible') {
+            steps {
+                sh 'pip install --upgrade ansible docker'
+            }
+        }
         stage('Deploy') {
             steps {
                 script {
@@ -62,8 +67,8 @@ pipeline {
                 script {
                     echo "Updating docker-compose.yml with new image tag: ${IMAGE_TAG}"
                     sh "sed -i 's|\\${IMAGE_TAG:-latest}|${IMAGE_TAG}|g' docker-compose.yml"
-                    sh "git config user.email 'jenkins@example.com'"
-                    sh "git config user.name 'Jenkins'"
+                    sh "git config user.email 'nguyentiendat20011008@gmail.com'"
+                    sh "git config user.name 'Dat'"
                     sh "git add docker-compose.yml"
                     sh "git commit -m 'Update docker-compose.yml with new image tag: ${IMAGE_TAG}'"
                     sh "git push origin HEAD:main"
