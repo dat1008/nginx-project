@@ -33,7 +33,7 @@ pipeline {
                 script {
                     echo 'Pushing Docker image to Docker Hub'
                     try {
-                        docker.withRegistry('https://index.docker.io/v2/', 'dockerhub-credentials-id') {
+                        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
                             sh '''
                                 docker push ${IMAGE_NAME}:${IMAGE_TAG}
                                 docker push ${IMAGE_NAME}:latest
@@ -52,7 +52,7 @@ pipeline {
                     try {
                         sh '''
                             ANSIBLE_HOST_KEY_CHECKING=False
-                            ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}"
+                            ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi 
                         '''
                     } catch (Exception e) {
                         error "Deployment failed: ${e.message}"
