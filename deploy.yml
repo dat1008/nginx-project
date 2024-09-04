@@ -1,5 +1,10 @@
 - hosts: nginx
   tasks:
+    - name: Upgrade Docker Python library
+      pip:
+        name: docker
+        state: latest
+
     - name: Login to Docker Hub
       docker_login:
         username: "datzofgk"
