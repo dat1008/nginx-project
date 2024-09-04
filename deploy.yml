@@ -1,5 +1,10 @@
 - hosts: nginx
   tasks:
+    - name: Login to Docker Hub
+    docker_login:
+      username: "{datzofgk}"
+      password: "{kmtls123@}"
+
     - name: Deploy with Docker Compose
       shell: docker compose up -d
       args:
