@@ -1,5 +1,9 @@
 - hosts: nginx
   tasks:
-    - name: Deploy with Docker Compose
-      shell: docker compose up -d
+    - name: Copy docker-compose.yml to remote host
+      copy:
+        src: docker-compose.yml
+        dest: /home/vsi/Docker/docker-compose.yml
 
+    - name: Deploy with Docker Compose
+      shell: docker compose -f /home/vsi/Docker/docker-compose.yml up -d
