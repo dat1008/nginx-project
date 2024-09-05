@@ -1,4 +1,7 @@
 - hosts: nginx
+  vars:
+    docker_image: "datzofgk/nginx-image"
+    image_tag: "{{ image_tag }}"
   tasks:
     - name: Pull Docker image
       docker_image:
@@ -7,7 +10,7 @@
       become: yes
 
     - name: Deploy with Docker Compose
-      shell: docker compose up -d
+      command: docker compose up -d
       args:
         chdir: /home/vsi/Docker
       become: yes
