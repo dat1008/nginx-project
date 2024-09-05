@@ -1,9 +1,5 @@
 - hosts: nginx
   tasks:
-    - name: Log in to Docker Hub
-      shell: docker login -u datzofgk -p kmtls123@
-      ignore_errors: yes
-
     - name: Deploy with Docker Compose
       shell: docker compose up -d
       args:
