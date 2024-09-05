@@ -1,7 +1,6 @@
 - hosts: nginx
   tasks:
     - name: Deploy with Docker Compose
-      shell: docker compose up -d
+      shell: docker compose up -d --verbose
       args:
         chdir: /home/vsi/Docker
-
