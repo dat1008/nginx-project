@@ -1,17 +1,6 @@
 - hosts: nginx
-  vars:
-    docker_image: "datzofgk/nginx-image"
-    image_tag: "{{ image_tag }}"
-  become: yes
-  become_method: sudo
-  become_user: root
   tasks:
-    - name: Pull Docker image
-      docker_image:
-        name: "{{ docker_image }}:{{ image_tag }}"
-        source: pull
-
     - name: Deploy with Docker Compose
-      command: docker compose up -d
+      shell: docker compose up -d
       args:
         chdir: /home/vsi/Docker
