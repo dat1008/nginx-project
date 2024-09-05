@@ -13,7 +13,7 @@ pipeline {
                     echo 'Building Docker image'
                     try {
                         sh '''
-                            docker build --cache-from ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${IMAGE_TAG} -t ${IMAGE_NAME}:latest .
+                            docker build --cache-from ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${IMAGE_TAG} .
                         '''
                     } catch (Exception e) {
                         error "Build failed: ${e.message}"
@@ -29,7 +29,6 @@ pipeline {
                         docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
                             sh '''
                                 docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                                docker push ${IMAGE_NAME}:latest
                             '''
                         }
                     } catch (Exception e) {
