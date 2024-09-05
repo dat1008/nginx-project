@@ -4,3 +4,6 @@
       shell: docker compose up -d --verbose
       args:
         chdir: /home/vsi/Docker
+
+    - name: Show Docker Compose logs
+      shell: docker compose logs
