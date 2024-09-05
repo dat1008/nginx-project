@@ -1,9 +1,13 @@
 - hosts: nginx
   tasks:
+    - name: Pull Docker image
+      docker_image:
+        name: "{{ docker_image }}:{{ image_tag }}"
+        source: pull
+      become: yes
+
     - name: Deploy with Docker Compose
       shell: docker compose up -d
       args:
         chdir: /home/vsi/Docker
-
-    - name: Show Docker Compose logs
-      shell: docker compose logs
+      become: yes
