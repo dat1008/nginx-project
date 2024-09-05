@@ -1,6 +1,6 @@
 - hosts: nginx
   tasks:
-    - name: Copy docker-compose.yml to remote host
+    - name: Copy docker-compose.yml to local host
       copy:
         src: docker-compose.yml
         dest: /home/vsi/Docker/docker-compose.yml
