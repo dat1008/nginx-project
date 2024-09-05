@@ -7,3 +7,4 @@
 
     - name: Deploy with Docker Compose
       shell: docker compose -f /home/vsi/Docker/docker-compose.yml up -d
+      
