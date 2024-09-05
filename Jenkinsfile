@@ -7,13 +7,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out source code'
-                checkout scm
-                sh 'ls -lah'
-            }
-        }
         stage('Build') {
             steps {
                 script {
@@ -62,18 +55,4 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            echo 'Cleaning up Docker system and workspace...'
-            sh 'docker system prune -f'
-            cleanWs()
-        }
-        success {
-            echo 'Build, test, and deployment succeeded!'
-        }
-        failure {
-            echo 'Build, test, or deployment failed!'
-        }
-    }
-}
 
