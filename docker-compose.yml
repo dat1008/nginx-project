@@ -4,4 +4,3 @@ services:
     image: datzofgk/nginx-image:v1
     ports:
       - "80:80"
-      
