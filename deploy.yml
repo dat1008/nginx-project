@@ -4,7 +4,7 @@
       shell: |
         docker build -t nginx-image:latest .
       args:
-        chdir: /path/to/your/dockerfile  
+        chdir: /home/vsi/nginx-deploy  
 
     - name: Tag Docker image for Nexus
       shell: |
@@ -25,3 +25,5 @@
 
     - name: Deploy with Docker Compose
       shell: docker compose -f /home/vsi/Docker/docker-compose.yml up -d
+
+    - name: Shutdown
