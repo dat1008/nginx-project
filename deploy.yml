@@ -8,7 +8,7 @@
       shell: |
         echo "kmtls123@" | docker login 10.10.3.67:1008 --username admin --password-stdin
 
-    - name: Push Docker image to Nexus
+    - name: Push Docker image to Nexus 
       shell: |
         docker push 10.10.3.67:1008/docker-hosted/nginx-image:latest
 
@@ -19,3 +19,7 @@
 
     - name: Deploy with Docker Compose
       shell: docker compose -f /home/vsi/Docker/docker-compose.yml up -d 
+
+    - name: pull image from nexus
+      shell: |
+        docker pull 10.10.3.67:1008/docker-hosted/nginx-image:latest
