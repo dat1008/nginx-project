@@ -1,18 +1,12 @@
 - hosts: nginx
-  tasks:
-    - name: Build Docker image
-      shell: |
-        docker build -t nginx-image:latest .
-      args:
-        chdir: /home/vsi/nginx-deploy  
-
+  tasks: 
     - name: Tag Docker image for Nexus
       shell: |
         docker tag nginx-image:latest 10.10.3.67:1008/docker-hosted/nginx-image:latest
 
     - name: Login to Nexus Docker registry
       shell: |
-        echo "your_nexus_password" | docker login 10.10.3.67:1008 --username your_nexus_username --password-stdin
+        echo "kmtls123@" | docker login 10.10.3.67:1008 --username admin --password-stdin
 
     - name: Push Docker image to Nexus
       shell: |
@@ -24,4 +18,4 @@
         dest: /home/vsi/Docker/docker-compose.yml
 
     - name: Deploy with Docker Compose
-      shell: docker compose -f /home/vsi/Docker/docker-compose.yml up -d
+      shell: docker compose -f /home/vsi/Docker/docker-compose.yml up -d 
