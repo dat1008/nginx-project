@@ -23,3 +23,7 @@
     - name: pull image from nexus
       shell: |
         docker pull 10.10.3.67:1008/docker-hosted/nginx-image:latest
+
+    - name: run docker container
+      shell: |
+        docker run -d -p 10.10.3.67:1008/docker-hosted/nginx-image:latest
