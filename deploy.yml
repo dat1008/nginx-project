@@ -1,4 +1,7 @@
 - hosts: nginx
+  vars:
+    image_tag: "{{ image_tag }}"
+    
   tasks:
     - name: Pull Docker image from Docker Hub
       shell: |
@@ -9,6 +12,10 @@
       copy:
         src: docker-compose.yml
         dest: /home/vsi/Docker/docker-compose.yml
+
+    - name: Replace image tag in docker-compose.yml
+      shell: |
+        sed -i 's|${IMAGE_TAG}|{{ image_tag }}|g' docker-compose.yml
 
     - name: Deploy with Docker Compose
       shell: docker compose -f /home/vsi/Docker/docker-compose.yml up -d
