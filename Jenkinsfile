@@ -21,18 +21,17 @@ pipeline {
                 }
             }
         }
-        stage('Push to Docker Hub') {
+        stage('Tag and Push to Nexus') {
             steps {
                 script {
-                    echo 'Pushing Docker image to Docker Hub'
+                    echo 'Tagging and Pushing Docker image to Nexus'
                     try {
-                        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
-                            sh '''
-                                docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                            '''
-                        }
+                        sh '''
+                            docker tag ${IMAGE_NAME}:${IMAGE_TAG} 10.10.3.67:1008/docker-hosted/${IMAGE_NAME}:${IMAGE_TAG}
+                            docker push 10.10.3.67:1008/docker-hosted/${IMAGE_NAME}:${IMAGE_TAG}
+                        '''
                     } catch (Exception e) {
-                        error "Push failed: ${e.message}"
+                        error "Tagging or Push failed: ${e.message}"
                     }
                 }
             }
@@ -44,7 +43,7 @@ pipeline {
                     try {
                         sh '''
                             ANSIBLE_HOST_KEY_CHECKING=False
-                            ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}"
+                            ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}" 
                         '''
                     } catch (Exception e) {
                         error "Deployment failed: ${e.message}"
