@@ -13,7 +13,7 @@ pipeline {
                     echo 'Building Docker image'
                     try {
                         sh '''
-                            docker build --cache-from ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                            docker build --cache-from ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${IMAGE_TAG} -t ${IMAGE_NAME}:latest .
                         '''
                     } catch (Exception e) {
                         error "Build failed: ${e.message}"
@@ -21,19 +21,19 @@ pipeline {
                 }
             }
         }
-        stage('Tag and Push to Nexus') {
+        stage('Push to Docker Hub') {
             steps {
                 script {
-                    echo 'Tagging and Pushing Docker image to Nexus'
+                    echo 'Pushing Docker image to Docker Hub'
                     try {
-                        docker.withRegistry('http://10.10.3.67:1008', 'nexus-api-key-id') {
+                        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
                             sh '''
-                                docker tag ${IMAGE_NAME}:${IMAGE_TAG} 10.10.3.67:1008/docker-hosted/${IMAGE_NAME}:${IMAGE_TAG}
-                                docker push 10.10.3.67:1008/docker-hosted/${IMAGE_NAME}:${IMAGE_TAG}
+                                docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                                docker push ${IMAGE_NAME}:latest
                             '''
                         }
                     } catch (Exception e) {
-                        error "Tagging or Push failed: ${e.message}"
+                        error "Push failed: ${e.message}"
                     }
                 }
             }
@@ -45,7 +45,7 @@ pipeline {
                     try {
                         sh '''
                             ANSIBLE_HOST_KEY_CHECKING=False
-                            ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}"
+                            ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}" 
                         '''
                     } catch (Exception e) {
                         error "Deployment failed: ${e.message}"
