@@ -10,13 +10,12 @@
 
     - name: Tag docker image with Nexus repo
       shell: |
-        docker tag {{ IMAGE_NAME }} 10.10.3.67:1008/docker-hosted/{{ IMAGE_NAME }}:{{ IMAGE_TAG }}
+        docker tag {{ image_name }} 10.10.3.67:1008/docker-hosted/{{ image_name }}:{{ image_tag }}
       args:
         executable: /bin/bash
 
     - name: Push image to Nexus repo
       shell: |
-        docker push 10.10.3.67:1008/docker-hosted/{{ IMAGE_NAME }}:{{ IMAGE_TAG }}
+        docker push 10.10.3.67:1008/docker-hosted/{{ image_name }}:{{ image_tag }}
       args:
         executable: /bin/bash
-
