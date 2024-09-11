@@ -1,29 +1,9 @@
 - hosts: nginx
-  tasks: 
-    - name: Tag Docker image for Nexus
-      shell: |
-        docker tag nginx-image:latest 10.10.3.67:1008/docker-hosted/nginx-image:latest
-
-    - name: Login to Nexus Docker registry
-      shell: |
-        echo "kmtls123@" | docker login 10.10.3.67:1008 --username admin --password-stdin
-
-    - name: Push Docker image to Nexus 
-      shell: |
-        docker push 10.10.3.67:1008/docker-hosted/nginx-image:latest
-
+  tasks:
     - name: Copy docker-compose.yml to local host
       copy:
         src: docker-compose.yml
         dest: /home/vsi/Docker/docker-compose.yml
 
     - name: Deploy with Docker Compose
-      shell: docker compose -f /home/vsi/Docker/docker-compose.yml up -d 
-
-    - name: pull image from nexus
-      shell: |
-        docker pull 10.10.3.67:1008/docker-hosted/nginx-image:latest
-
-    - name: run docker container
-      shell: |
-        docker run -d -p 10.10.3.67:1008/docker-hosted/nginx-image:latest
+      shell: docker compose -f /home/vsi/Docker/docker-compose.yml up -d
