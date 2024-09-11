@@ -26,10 +26,12 @@ pipeline {
                 script {
                     echo 'Tagging and Pushing Docker image to Nexus'
                     try {
-                        sh '''
-                            docker tag ${IMAGE_NAME}:${IMAGE_TAG} 10.10.3.67:1008/docker-hosted/${IMAGE_NAME}:${IMAGE_TAG}
-                            docker push 10.10.3.67:1008/docker-hosted/${IMAGE_NAME}:${IMAGE_TAG}
-                        '''
+                        docker.withRegistry('http://10.10.3.67:1008', 'nexus-api-key-id') {
+                            sh '''
+                                docker tag ${IMAGE_NAME}:${IMAGE_TAG} 10.10.3.67:1008/docker-hosted/${IMAGE_NAME}:${IMAGE_TAG}
+                                docker push 10.10.3.67:1008/docker-hosted/${IMAGE_NAME}:${IMAGE_TAG}
+                            '''
+                        }
                     } catch (Exception e) {
                         error "Tagging or Push failed: ${e.message}"
                     }
@@ -43,7 +45,7 @@ pipeline {
                     try {
                         sh '''
                             ANSIBLE_HOST_KEY_CHECKING=False
-                            ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}" 
+                            ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}"
                         '''
                     } catch (Exception e) {
                         error "Deployment failed: ${e.message}"
