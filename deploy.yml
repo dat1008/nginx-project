@@ -7,3 +7,11 @@
 
     - name: Deploy with Docker Compose
       shell: docker compose -f /home/vsi/Docker/docker-compose.yml up -d
+
+    - name: Tag docker image with Nexus repo
+      shell: |
+        docker tag ${IMAGE_NAME} 10.10.3.67:1008/docker-hosted/${IMAGE_NAME}:${IMAGE_TAG}
+
+    - name: Push image to Nexus repo
+      shell: |
+        docker push 10.10.3.67:1008/docker-hosted/${IMAGE_NAME}:${IMAGE_TAG}
