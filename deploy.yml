@@ -5,6 +5,9 @@
         src: docker-compose.yml
         dest: /home/vsi/Docker/docker-compose.yml
 
+    - name: Pull Docker image from Docker Hub
+      shell: docker pull datzofgk/nginx-image:{{ image_tag }}
+
     - name: Deploy with Docker Compose
       shell: docker compose -f /home/vsi/Docker/docker-compose.yml up -d
 
