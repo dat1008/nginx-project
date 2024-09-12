@@ -45,7 +45,7 @@ pipeline {
                 script {
                     echo 'Tagging and Pushing Docker image to Nexus'
                     try {
-                        docker.withRegistry('http://10.10.3.67:8081/', 'nexus-credentials-id') {
+                        docker.withRegistry('http://10.10.3.67:1008/', 'nexus-credentials-id') {
                             sh '''
                                 docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${NEXUS_REPO}:${IMAGE_TAG}
                                 docker push ${NEXUS_REPO}:${IMAGE_TAG}
