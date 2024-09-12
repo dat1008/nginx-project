@@ -4,6 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "datzofgk/nginx-image"
         IMAGE_TAG = "v${BUILD_NUMBER}"
+        NEXUS_REPO = "10.10.3.67:1008/docker-hosted/${IMAGE_NAME}"
     }
 
     stages {
@@ -21,6 +22,7 @@ pipeline {
                 }
             }
         }
+
         stage('Push to Docker Hub') {
             steps {
                 script {
@@ -37,6 +39,25 @@ pipeline {
                 }
             }
         }
+
+        stage('Tag and Push to Nexus') {
+            steps {
+                script {
+                    echo 'Tagging and Pushing Docker image to Nexus'
+                    try {
+                        docker.withRegistry('http://10.10.3.67:1008/', 'nexus-credentials-id') {
+                            sh '''
+                                docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${NEXUS_REPO}:${IMAGE_TAG}
+                                docker push ${NEXUS_REPO}:${IMAGE_TAG}
+                            '''
+                        }
+                    } catch (Exception e) {
+                        error "Push to Nexus failed: ${e.message}"
+                    }
+                }
+            }
+        }
+
         stage('Deploy') {
             steps {
                 script {
