@@ -10,3 +10,7 @@
 
     - name: Pull Docker image from Nexus
       shell: docker pull 10.10.3.67:1008/docker-hosted/datzofgk/nginx-image:{{ image_tag }}
+
+    - name: Run Container
+      shell: |
+        docker run 2903:80 -d -p 10.10.3.67:1008/docker-hosted/datzofgk/nginx-image:{{ image_tag }}
