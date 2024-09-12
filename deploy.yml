@@ -1,13 +1,5 @@
 - hosts: nginx
   tasks:
-
-    - name: Log in to Docker Hub
-      shell: echo "kmtls123@" | docker login -u datzofgk --password-stdin
-  
-    - name: Pull Docker image from Docker Hub
-      shell: |
-        docker pull datzofgk/nginx-image:{{ image_tag }}
-
     - name: Copy docker-compose.yml to local host
       copy:
         src: docker-compose.yml
