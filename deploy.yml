@@ -1,10 +1,5 @@
 - hosts: nginx
   tasks:
-    - name: Pull Docker image from Docker Hub
-      shell: |
-        docker pull datzofgk/nginx-image:{{ image_tag }}
-      become: true
-  
     - name: Copy docker-compose.yml to local host
       copy:
         src: docker-compose.yml
@@ -13,14 +8,6 @@
     - name: Deploy with Docker Compose
       shell: docker compose -f /home/vsi/Docker/docker-compose.yml up -d
 
-    - name: Tag docker image with Nexus repo
+    - name: Pull image from Nexus
       shell: |
-        docker tag {{ image_name }} 10.10.3.67:1008/docker-hosted/{{ image_name }}:{{ image_tag }}
-      args:
-        executable: /bin/bash
-
-    - name: Push image to Nexus repo
-      shell: |
-        docker push 10.10.3.67:1008/docker-hosted/{{ image_name }}:{{ image_tag }}
-      args:
-        executable: /bin/bash 
+        docker pull 10.10.3.67:1008/docker-hosted/
