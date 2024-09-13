@@ -9,7 +9,7 @@
         dest: /home/vsi/Docker/docker-compose.yml
 
     - name: Deploy with Docker Compose
-      shell: 
+      shell: |
         export IMAGE_TAG={{ image_tag }}
         docker compose -f /home/vsi/Docker/docker-compose.yml up -d
 
