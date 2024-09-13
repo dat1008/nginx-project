@@ -1,6 +1,6 @@
 version: '3'
 services:
   nginx:
-    image: datzofgk/nginx-image:{{ image_tag }}
+    image: datzofgk/nginx-image
     ports:
       - "80:80"
