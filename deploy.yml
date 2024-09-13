@@ -1,8 +1,7 @@
 - hosts: nginx
   tasks:
-      - name: Pull Docker image from Docker Hub
-      shell: |
-        docker pull datzofgk/nginx-image:{{ image_tag }}
+    - name: Pull Docker image from Docker Hub
+      shell: docker pull datzofgk/nginx-image:{{ image_tag }}
         
     - name: Copy docker-compose.yml to local host
       copy:
