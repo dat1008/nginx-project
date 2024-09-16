@@ -70,7 +70,7 @@ pipeline {
                         '''
                     } catch (Exception e) {
                         echo "Error during Deploy stage: ${e.getMessage()}"
-                        error("Deploy stage failed")
+                        error("Deploy stage failed")                                                                
                     }
                 }
             }
