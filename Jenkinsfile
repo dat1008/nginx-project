@@ -11,12 +11,10 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    echo 'Building Docker image'
-                    try {
-                        sh '''
-                            docker build --cache-from ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${IMAGE_TAG} .
-                        '''
-                    } 
+                    echo 'Building Docker image with updated HTML'
+                    sh '''
+                        docker build --cache-from ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                    '''
                 }
             }
         }
@@ -25,13 +23,9 @@ pipeline {
             steps {
                 script {
                     echo 'Pushing Docker image to Docker Hub'
-                    try {
-                        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
-                            sh '''
-                                docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                            '''
-                        }
-                    } 
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
+                        sh 'docker push ${IMAGE_NAME}:${IMAGE_TAG}'
+                    }
                 }
             }
         }
@@ -40,14 +34,12 @@ pipeline {
             steps {
                 script {
                     echo 'Tagging and Pushing Docker image to Nexus'
-                    try {
-                        docker.withRegistry('http://10.10.3.67:1008/', 'nexus-credentials-id') {
-                            sh '''
-                                docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${NEXUS_REPO}:${IMAGE_TAG}
-                                docker push ${NEXUS_REPO}:${IMAGE_TAG}
-                            '''
-                        }
-                    } 
+                    docker.withRegistry('http://10.10.3.67:1008/', 'nexus-credentials-id') {
+                        sh '''
+                            docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${NEXUS_REPO}:${IMAGE_TAG}
+                            docker push ${NEXUS_REPO}:${IMAGE_TAG}
+                        '''
+                    }
                 }
             }
         }
@@ -56,12 +48,10 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying Docker container'
-                    try {
-                        sh '''
-                            ANSIBLE_HOST_KEY_CHECKING=False
-                            ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}" 
-                        '''
-                    } 
+                    sh '''
+                        ANSIBLE_HOST_KEY_CHECKING=False
+                        ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}" 
+                    '''
                 }
             }
         }
