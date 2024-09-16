@@ -28,7 +28,7 @@ pipeline {
                         def previousHash = readFile(HASH_FILE).trim()
                         def currentHash = sh(script: 'md5sum ./src/index.html | awk \'{ print $1 }\'', returnStdout: true).trim()
                         if (previousHash == currentHash) {
-                            echo 'index.html has not changed. Skipping push and tag stages.'
+                            echo 'index.html has not changed. Skipping push, tag, and deploy stages.'
                             currentBuild.result = 'SUCCESS'
                             return
                         }
@@ -51,7 +51,6 @@ pipeline {
         stage('Push to Docker Hub') {
             when {
                 expression {
-                    // Run this stage only if index.html has changed
                     fileExists(HASH_FILE) && readFile(HASH_FILE).trim() != sh(script: 'md5sum ./src/index.html | awk \'{ print $1 }\'', returnStdout: true).trim()
                 }
             }
@@ -70,7 +69,6 @@ pipeline {
         stage('Tag and Push to Nexus') {
             when {
                 expression {
-                    // Run this stage only if index.html has changed
                     fileExists(HASH_FILE) && readFile(HASH_FILE).trim() != sh(script: 'md5sum ./src/index.html | awk \'{ print $1 }\'', returnStdout: true).trim()
                 }
             }
@@ -87,10 +85,26 @@ pipeline {
             }
         }
 
+        stage('Deploy') {
+            when {
+                expression {
+                    fileExists(HASH_FILE) && readFile(HASH_FILE).trim() != sh(script: 'md5sum ./src/index.html | awk \'{ print $1 }\'', returnStdout: true).trim()
+                }
+            }
+            steps {
+                script {
+                    echo 'Deploying Docker container'
+                    sh '''
+                        ANSIBLE_HOST_KEY_CHECKING=False
+                        ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}"
+                    '''
+                }
+            }
+        }
+
         stage('Update Hash') {
             when {
                 expression {
-                    // Run this stage only if index.html has changed
                     fileExists(HASH_FILE) && readFile(HASH_FILE).trim() != sh(script: 'md5sum ./src/index.html | awk \'{ print $1 }\'', returnStdout: true).trim()
                 }
             }
