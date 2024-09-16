@@ -2,11 +2,16 @@
   tasks:
     - name: Pull Docker image from Docker Hub
       shell: docker pull datzofgk/nginx-image:{{ image_tag }}
-        
+
     - name: Copy docker-compose.yml to local host
       copy:
         src: docker-compose.yml
         dest: /home/vsi/Docker/docker-compose.yml
+
+    - name: Stop and remove the existing container
+      shell: |
+        docker-compose -f /home/vsi/Docker/docker-compose.yml down
+      ignore_errors: yes
 
     - name: Deploy with Docker Compose
       shell: |
