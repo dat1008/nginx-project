@@ -16,9 +16,7 @@ pipeline {
                         sh '''
                             docker build --cache-from ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${IMAGE_TAG} .
                         '''
-                    } catch (Exception e) {
-                        error "Build failed: ${e.message}"
-                    }
+                    } 
                 }
             }
         }
@@ -33,9 +31,7 @@ pipeline {
                                 docker push ${IMAGE_NAME}:${IMAGE_TAG}
                             '''
                         }
-                    } catch (Exception e) {
-                        error "Push failed: ${e.message}"
-                    }
+                    } 
                 }
             }
         }
@@ -51,9 +47,7 @@ pipeline {
                                 docker push ${NEXUS_REPO}:${IMAGE_TAG}
                             '''
                         }
-                    } catch (Exception e) {
-                        error "Push to Nexus failed: ${e.message}"
-                    }
+                    } 
                 }
             }
         }
@@ -67,9 +61,7 @@ pipeline {
                             ANSIBLE_HOST_KEY_CHECKING=False
                             ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}" 
                         '''
-                    } catch (Exception e) {
-                        error "Deployment failed: ${e.message}"
-                    }
+                    } 
                 }
             }
         }
