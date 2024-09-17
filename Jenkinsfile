@@ -11,8 +11,8 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    echo 'Building Docker image'
                     try {
+                        echo 'Building Docker image'
                         sh '''
                             docker build --cache-from ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${IMAGE_TAG} .
                         '''
@@ -26,15 +26,15 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    echo 'Pushing Docker image to Docker Hub'
                     try {
+                        echo 'Pushing Docker image to Docker Hub'
                         docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
                             sh '''
                                 docker push ${IMAGE_NAME}:${IMAGE_TAG}
                             '''
                         }
                     } catch (Exception e) {
-                        error "Push failed: ${e.message}"
+                        error "Push to Docker Hub failed: ${e.message}"
                     }
                 }
             }
@@ -43,8 +43,8 @@ pipeline {
         stage('Tag and Push to Nexus') {
             steps {
                 script {
-                    echo 'Tagging and Pushing Docker image to Nexus'
                     try {
+                        echo 'Tagging and Pushing Docker image to Nexus'
                         docker.withRegistry('http://10.10.3.67:1008/', 'nexus-credentials-id') {
                             sh '''
                                 docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${NEXUS_REPO}:${IMAGE_TAG}
@@ -58,17 +58,17 @@ pipeline {
             }
         }
 
-        stage('Cleanup') {
+        stage('Clean up old images') {
             steps {
                 script {
-                    echo 'Cleaning up local Docker images'
                     try {
+                        echo 'Removing old Docker images'
                         sh '''
-                            docker rmi ${IMAGE_NAME}:${IMAGE_TAG} || true
-                            docker rmi ${NEXUS_REPO}:${IMAGE_TAG} || true
+                            # List all images except the newest one
+                            docker images --filter "before=${IMAGE_NAME}:${IMAGE_TAG}" -q | xargs --no-run-if-empty docker rmi -f
                         '''
                     } catch (Exception e) {
-                        echo "Cleanup failed: ${e.message}, but it's okay to proceed."
+                        error "Image clean-up failed: ${e.message}"
                     }
                 }
             }
@@ -77,8 +77,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    echo 'Deploying Docker container'
                     try {
+                        echo 'Deploying Docker container'
                         sh '''
                             ANSIBLE_HOST_KEY_CHECKING=False
                             ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}" 

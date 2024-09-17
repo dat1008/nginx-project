@@ -3,6 +3,10 @@
     - name: Pull Docker image from Docker Hub
       shell: docker pull datzofgk/nginx-image:{{ image_tag }}
 
+    - name: Remove old Docker images
+      shell: >
+        docker images --filter "before=datzofgk/nginx-image:{{ image_tag }}" -q | xargs --no-run-if-empty docker rmi -f
+
     - name: Copy docker-compose.yml to local host
       copy:
         src: docker-compose.yml
@@ -18,5 +22,5 @@
         export IMAGE_TAG={{ image_tag }}
         docker compose -f /home/vsi/Docker/docker-compose.yml up -d
 
-    - name: Pull Docker image from Nexus
-      shell: docker pull 10.10.3.67:1008/docker-hosted/datzofgk/nginx-image:{{ image_tag }}
+    # - name: Pull Docker image from Nexus
+    #   shell: docker pull 10.10.3.67:1008/docker-hosted/datzofgk/nginx-image:{{ image_tag }}
