@@ -1,8 +1,5 @@
 - hosts: nginx
   tasks:
-    - name: Remove old Docker image if exists
-      shell: docker rmi datzofgk/nginx-image:latest || true
-
     - name: Pull Docker image from Docker Hub
       shell: docker pull datzofgk/nginx-image:{{ image_tag }}
 
