@@ -58,22 +58,6 @@ pipeline {
             }
         }
 
-        stage('Clean up old images') {
-            steps {
-                script {
-                    try {
-                        echo 'Removing old Docker images'
-                        sh '''
-                            # List all images except the newest one
-                            docker images --filter "before=${IMAGE_NAME}:${IMAGE_TAG}" -q | xargs --no-run-if-empty docker rmi -f
-                        '''
-                    } catch (Exception e) {
-                        error "Image clean-up failed: ${e.message}"
-                    }
-                }
-            }
-        }
-
         stage('Deploy') {
             steps {
                 script {
