@@ -20,6 +20,6 @@
         docker compose -f /home/vsi/Docker/docker-compose.yml up -d
 
     - name: Pull Docker image from Nexus
-      - shell: >
-          docker pull 10.10.3.67:1008/docker-hosted/datzofgk/nginx-image:{{ image_tag }}
+      shell: >
+        docker pull 10.10.3.67:1008/docker-hosted/datzofgk/nginx-image:{{ image_tag }}
 
