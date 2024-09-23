@@ -18,4 +18,3 @@
       shell: |
         export IMAGE_TAG={{ image_tag }}
         docker compose -f /home/vsi/Docker/docker-compose.yml up -d
-
