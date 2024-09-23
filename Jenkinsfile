@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        sonarqube 'sonarscanner'  
-    }
-
     environment {
         IMAGE_NAME = "datzofgk/nginx-image"
         IMAGE_TAG = "v${BUILD_NUMBER}"
@@ -54,7 +50,7 @@ pipeline {
         stage('SonarQube Scan and Quality Gate') {
             steps {
                 script {
-                    echo 'Run SonarQube Scan and wait for Quality Gate'
+                    echo 'Running SonarQube Scan and waiting for Quality Gate'
                     withSonarQubeEnv(SONARQUBE_SERVER) {
                         sh '''
                             sonar-scanner \
