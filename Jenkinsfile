@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        sonarqube 'sonarscanner'  
+    }
+
     environment {
         IMAGE_NAME = "datzofgk/nginx-image"
         IMAGE_TAG = "v${BUILD_NUMBER}"
@@ -62,15 +66,15 @@ pipeline {
         stage('SonarQube Scan and Quality Gate') {
             steps {
                 script {
-                    echo 'Running SonarQube Scan and waiting for Quality Gate'
+                    echo 'Run SonarQube Scan and wait for Quality Gate'
                     withSonarQubeEnv(SONARQUBE_SERVER) {
-                        try {
-                            sh '''
-                                mvn clean verify sonar:sonar -Dsonar.projectKey=nginx -Dsonar.host.url=http://10.10.3.67:9000/ -Dsonar.login=${sonarqube}
-                            ''' 
-                        } catch (Exception e) {
-                            error "SonarQube Scan failed: ${e.message}"
-                        }
+                        sh '''
+                            sonar-scanner \
+                            -Dsonar.projectKey=nginx \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://10.10..3.67:9000 \
+                            -Dsonar.login=${sonarqube}
+                        '''
                     }
 
                     timeout(time: 1, unit: 'HOURS') {
