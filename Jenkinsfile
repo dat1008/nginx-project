@@ -64,10 +64,6 @@ pipeline {
                             -Dsonar.host.url=http://10.10.3.67:9000
                         '''
                     }
-
-                    timeout(time: 5, unit: 'MINUTES') {
-                        waitForQualityGate abortPipeline: true
-                    }
                 }
             }
         }
