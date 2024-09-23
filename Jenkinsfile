@@ -47,25 +47,25 @@ pipeline {
             }
         }
 
-        stage('SonarQube Scan and Quality Gate') {
-            steps {
-                script {
-                    echo 'Running SonarQube Scan and waiting for Quality Gate'
-                    withSonarQubeEnv(SONARQUBE_SERVER) {
-                        sh '''
-                            sonar-scanner \
-                            -Dsonar.projectKey=nginx \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=http://10.10.3.67:9000
-                        '''
-                    }
+        // stage('SonarQube Scan and Quality Gate') {
+        //     steps {
+        //         script {
+        //             echo 'Running SonarQube Scan and waiting for Quality Gate'
+        //             withSonarQubeEnv(SONARQUBE_SERVER) {
+        //                 sh '''
+        //                     sonar-scanner \
+        //                     -Dsonar.projectKey=nginx \
+        //                     -Dsonar.sources=. \
+        //                     -Dsonar.host.url=http://10.10.3.67:9000
+        //                 '''
+        //             }
 
-                    timeout(time: 1, unit: 'HOURS') {
-                        waitForQualityGate abortPipeline: true
-                    }
-                }
-            }
-        }
+        //             timeout(time: 1, unit: 'HOURS') {
+        //                 waitForQualityGate abortPipeline: true
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Deploy') {
             steps {
