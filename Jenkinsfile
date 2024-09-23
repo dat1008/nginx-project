@@ -74,7 +74,7 @@ pipeline {
         //             echo 'Deploying Docker container'
         //             sh '''
         //                 ANSIBLE_HOST_KEY_CHECKING=False
-        //                 ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}" 
+        //                 ansible-playbook deploy.yml --private-key=/var/jenkins_home/id_rsa -i inventory -u vsi -e "image_tag=${IMAGE_TAG}" -e "image_name=${IMAGE_NAME}"
         //             '''
         //         }
         //     }
