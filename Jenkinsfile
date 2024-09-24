@@ -30,6 +30,18 @@ pipeline {
             }
         }
 
+        stage('Test with Snyk') {
+            steps {
+                script {
+                    echo 'Testing with Snyk'
+                    snykSecurity(
+                        snykInstallation: 'snyk',
+                        snykTokenId: 'snyk-token',
+                    )
+                }
+            }
+        }
+
         // stage('Build') {
         //     steps {
         //         script {
