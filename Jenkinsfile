@@ -34,6 +34,9 @@ pipeline {
             steps {
                 script {
                     echo 'Testing with Snyk'
+                    // Check current directory and list files
+                    sh 'pwd'
+                    sh 'ls -la'
                     snykSecurity(
                         snykInstallation: 'snyk',
                         snykTokenId: 'snyk-token',
