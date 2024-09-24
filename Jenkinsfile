@@ -10,6 +10,26 @@ pipeline {
     }
 
     stages {
+        stage('SonarQube Scan') {
+            environment {
+                scannerHome = tool "${SONAR_SCANNER}"
+            }
+
+            steps {
+                script {
+                    echo 'Run SonarQube Scan'
+                    withSonarQubeEnv("${SONARQUBE_SERVER}") {
+                        sh '''
+                            ${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=nginx \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://10.10.3.67:9000
+                        '''
+                    }
+                }
+            }
+        }
+
         // stage('Build') {
         //     steps {
         //         script {
@@ -47,26 +67,6 @@ pipeline {
         //         }
         //     }
         // }
-
-        stage('SonarQube Scan') {
-            environment {
-                scannerHome = tool "${SONAR_SCANNER}"
-            }
-
-            steps {
-                script {
-                    echo 'Run SonarQube Scan'
-                    withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                        sh '''
-                            ${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=nginx \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=http://10.10.3.67:9000
-                        '''
-                    }
-                }
-            }
-        }
 
         // stage('Deploy') {
         //     steps {
