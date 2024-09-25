@@ -23,7 +23,8 @@ pipeline {
                             ${scannerHome}/bin/sonar-scanner \
                             -Dsonar.projectKey=nginx \
                             -Dsonar.sources=. \
-                            -Dsonar.host.url=http://10.10.3.67:9000
+                            -Dsonar.host.url=http://10.10.3.67:9000 \
+                            -Dsonar.inclusions=Jenkinsfile
                         '''
                     }
                 }
