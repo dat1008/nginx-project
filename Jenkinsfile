@@ -55,7 +55,7 @@ pipeline {
                 script {
                     echo 'Building Docker image'
                     sh '''
-                        docker build --cache-from ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                        docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
                     '''
                 }
             }
