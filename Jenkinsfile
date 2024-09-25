@@ -55,6 +55,7 @@ pipeline {
                 script {
                     echo 'Building Docker image'
                     sh '''
+                        docker rmi $(docker images -q ${IMAGE_NAME} --filter "dangling=false" | sort -n | tail -n 1) || true && \
                         docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
                     '''
                 }
