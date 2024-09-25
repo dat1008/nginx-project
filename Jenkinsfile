@@ -40,6 +40,11 @@ pipeline {
                     snykSecurity(
                         snykInstallation: 'snyk',
                         snykTokenId: 'snyk-token',
+                        options: [
+                            'test',
+                            '--severity-threshold=low',
+                            '--docker',
+                        ]
                     )
                 }
             }
